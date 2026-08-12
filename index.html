@@ -325,7 +325,8 @@
           <select id="fAudience" class="input">
             <option value="비로그인" selected>비로그인</option>
             <option value="비로그인(본인인증)">비로그인(본인인증)</option>
-            <option value="로그인">로그인</option>
+            <option value="로그인(전체)">로그인(전체)</option>
+            <option value="로그인+비로그인(핸드폰인증)">로그인+비로그인(핸드폰인증)</option>
           </select>
         </div>
       </div>
@@ -421,7 +422,7 @@
 
   // Bump this on every deployed change, together with the matching value in version.json.
   // checkForUpdate() below compares the two to tell a visitor "a newer version is live".
-  var APP_VERSION = "0.4";
+  var APP_VERSION = "0.5";
 
   // ---------- helpers ----------
   function $(sel, root){ return (root||document).querySelector(sel); }
