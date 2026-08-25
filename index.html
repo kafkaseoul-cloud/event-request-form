@@ -4,37 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>이벤트 제작 요청서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --text: #080808;
-    --muted: #818181;
-    --border: #9e9e9e;
-    --error: #e54545;
+    --primary: #e6007e;
+    --primary-dark: #b8005f;
+    --primary-soft: #fce4f1;
+    --on-primary: #ffffff;
+    --text: rgba(0,0,0,.87);
+    --muted: rgba(0,0,0,.6);
+    --text-disabled: rgba(0,0,0,.38);
+    --divider: rgba(0,0,0,.12);
+    --border: rgba(0,0,0,.28);
+    --error: #d32f2f;
     --accent: #e6007e;
-    --header-bg: #dedede;
+    --header-bg: #f5f5f5;
     --dark: #080808;
-    --disabled: #b8b8b8;
+    --disabled: rgba(0,0,0,.12);
     --secondary-bg: #dfdfdf;
     --surface: #ffffff;
-    --bg: #f2f2f4;
-    --radius: 6px;
+    --bg: #f5f5f6;
+    --radius: 10px;
+    --radius-sm: 4px;
+    --elevation-1: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+    --elevation-3: 0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12);
+    --elevation-8: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
   }
   *{ box-sizing: border-box; }
   html,body{ margin:0; padding:0; }
   body{
-    font-family: "Pretendard","Malgun Gothic","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-family: "Roboto","Noto Sans KR","Pretendard","Malgun Gothic","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     color: var(--text);
     background: var(--bg);
     line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
   }
   .page{ max-width: 1320px; margin: 0 auto; padding: 40px 20px 100px; }
   .page-header{ margin-bottom: 28px; }
-  .page-header h1{ font-size: 26px; margin: 0 0 8px; }
+  .page-header h1{ font-size: 28px; font-weight:500; letter-spacing:-0.2px; margin: 0 0 8px; }
   .page-header p{ margin:0; color: var(--muted); font-size: 14px; }
 
   .card{
     background: var(--surface);
-    border: 1px solid #000;
+    border: none;
+    box-shadow: var(--elevation-1);
     border-radius: var(--radius);
     padding: 32px;
     margin-bottom: 24px;
@@ -42,32 +57,59 @@
   .hidden{ display:none !important; }
 
   .field-group{ margin-bottom: 28px; }
-  .field-label{ display:block; font-size:15px; font-weight:600; margin-bottom:10px; }
+  .field-label{ display:block; font-size:14px; font-weight:500; color:var(--text); margin-bottom:10px; }
   .req::before{ content:"* "; color: var(--error); }
   .hint{ font-size:12px; color: var(--muted); white-space:nowrap; }
 
   .radio-row, .checkbox-row{ display:flex; gap:24px; flex-wrap:wrap; }
-  .radio-item, .checkbox-item{ display:flex; align-items:center; gap:8px; font-size:15px; cursor:pointer; }
+  .radio-item, .checkbox-item{ display:flex; align-items:center; gap:10px; font-size:15px; color:var(--text); cursor:pointer; }
+
+  /* Material-style custom radio & checkbox (native inputs, CSS-only skin) */
   .radio-item input[type=radio], .checkbox-item input[type=checkbox]{
-    width:20px; height:20px; accent-color: var(--accent); cursor:pointer; margin:0;
+    -webkit-appearance:none; appearance:none; margin:0; flex-shrink:0;
+    width:20px; height:20px; border:2px solid var(--muted); background:#fff;
+    cursor:pointer; position:relative;
+    transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+  }
+  .radio-item input[type=radio]{ border-radius:50%; }
+  .checkbox-item input[type=checkbox]{ border-radius:3px; }
+  .radio-item input[type=radio]:hover, .checkbox-item input[type=checkbox]:hover{ border-color: var(--primary); }
+  .radio-item input[type=radio]:focus-visible, .checkbox-item input[type=checkbox]:focus-visible{
+    outline:none; box-shadow: 0 0 0 4px var(--primary-soft);
+  }
+  .radio-item input[type=radio]:checked{ border-color: var(--primary); }
+  .radio-item input[type=radio]:checked::after{
+    content:""; position:absolute; inset:4px; border-radius:50%; background: var(--primary);
+  }
+  .checkbox-item input[type=checkbox]:checked{ border-color: var(--primary); background: var(--primary); }
+  .checkbox-item input[type=checkbox]:checked::after{
+    content:""; position:absolute; left:5px; top:1px; width:5px; height:10px;
+    border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg);
   }
 
   .input, textarea.input, select.input{
-    width:100%; padding:12px 14px; font-size:15px; border:1.5px solid var(--border);
-    border-radius: 4px; font-family:inherit; color:var(--text); background:#fff;
+    width:100%; padding:12px 14px; font-size:15px; border:1px solid var(--border);
+    border-radius: var(--radius-sm); font-family:inherit; color:var(--text); background:#fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
   }
   .input::placeholder{ color: var(--muted); }
-  .input:focus{ outline:none; border-color:#080808; }
+  .input:hover{ border-color: var(--text); }
   textarea.input{ min-height: 90px; resize: vertical; }
   .input.error{ border-color: var(--error); }
-  .input:disabled{ background: #ececec; color: var(--muted); border-color: #d4d4d4; cursor: not-allowed; }
-  .input:disabled::placeholder{ color: #b3b3b3; }
+  /* Focus always reads as "editing" (primary ring), even on a field that's currently marked
+     invalid — otherwise focusing an errored field flashes error-red instead of the normal
+     focus color, which reads as "is this an error or a focus state?" The error border only
+     needs to show at rest; the message text below the field stays visible regardless. */
+  .input:focus, .input.error:focus{ outline:none; border-color:var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .input:disabled{ background: rgba(0,0,0,.04); color: var(--text-disabled); border-color: var(--divider); cursor: not-allowed; }
+  .input:disabled:hover{ border-color: var(--divider); }
+  .input:disabled::placeholder{ color: var(--text-disabled); }
   .error-msg{ display:none; color: var(--error); font-size:13px; margin-top:6px; }
   .error-msg.show{ display:block; }
 
   .row-with-hint{ display:flex; gap:12px; align-items:flex-start; }
   .row-with-hint > div{ flex:1; min-width:0; }
-  .row-with-hint > .hint{ padding-top:14px; margin-top:0; }
+  .row-with-hint > .hint{ padding-top:14px; margin-top:0; width:78px; text-align:left; }
 
   .period-row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
   .period-dash{ font-size:22px; color:var(--text); }
@@ -80,7 +122,7 @@
     width:30px; height:30px; border:none; background:transparent; cursor:pointer;
     display:flex; align-items:center; justify-content:center; padding:0; color:var(--muted);
   }
-  .picker-field .icon-btn:hover{ color: var(--text); }
+  .picker-field .icon-btn:hover{ color: var(--primary); }
   .picker-field .native-picker{
     position:absolute; right:6px; top:50%; transform:translateY(-50%);
     width:30px; height:30px; opacity:0; pointer-events:none; border:none; padding:0;
@@ -91,41 +133,50 @@
 
   .btn{
     display:inline-flex; align-items:center; justify-content:center;
-    padding:14px 28px; border-radius: 5px; border:none; font-size:15px; font-weight:600;
-    cursor:pointer; font-family:inherit;
+    padding:12px 26px; border-radius: var(--radius-sm); border:none; font-size:14.5px; font-weight:500;
+    letter-spacing:.3px; cursor:pointer; font-family:inherit;
+    transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease;
   }
-  .btn-primary{ background: var(--dark); color:#fff; }
-  .btn-primary:disabled{ background: var(--disabled); cursor:not-allowed; }
-  .btn-secondary{ background: var(--secondary-bg); color: var(--text); }
-  .btn-dark-sm{ background: var(--dark); color:#fff; padding:10px 18px; font-size:13px; font-weight:500; border-radius:4px; }
+  .btn-primary{ background: var(--primary); color: var(--on-primary); box-shadow: var(--elevation-1); }
+  .btn-primary:hover{ background: var(--primary-dark); box-shadow: var(--elevation-3); }
+  .btn-primary:disabled{ background: var(--disabled); color: var(--text-disabled); box-shadow:none; cursor:not-allowed; }
+  .btn-secondary{ background: transparent; color: var(--primary); border:1px solid var(--primary); }
+  .btn-secondary:hover{ background: var(--primary-soft); }
+  .btn-dark-sm{
+    background: transparent; color: var(--muted); border:1px solid var(--border);
+    padding:9px 16px; font-size:13px; font-weight:500; border-radius:var(--radius-sm);
+    letter-spacing:.3px; transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn-dark-sm:hover{ background: rgba(0,0,0,.04); border-color: var(--text); color: var(--text); }
 
   .form-actions{ display:flex; justify-content:center; gap:16px; margin-top:8px; }
 
   .step-indicator{ display:flex; gap:10px; margin-bottom:28px; }
   .step-indicator .step{
-    padding:8px 18px; border-radius:999px; border:1px solid #000; font-size:13px; color:var(--muted);
+    padding:8px 18px; border-radius:999px; border:1px solid var(--border); font-size:13px; font-weight:500; color:var(--muted);
+    transition: background-color .2s ease, color .2s ease, border-color .2s ease;
   }
-  .step-indicator .step.active{ background: var(--dark); color:#fff; border-color: var(--dark); }
+  .step-indicator .step.active{ background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
 
-  .section-title{ font-size:18px; font-weight:700; margin: 0 0 14px; padding-top:8px; border-top:1px solid #e5e5e5; }
+  .section-title{ font-size:18px; font-weight:500; color:var(--text); margin: 0 0 14px; padding-top:8px; border-top:1px solid var(--divider); }
   .field-group.no-border .section-title{ border-top:none; padding-top:0; }
 
   .q-block, .consent-block{
-    background: #f5f5f5; border:1px solid #000; padding:20px; margin-bottom:16px; border-radius:4px;
+    background: rgba(0,0,0,.025); border:1px solid var(--divider); padding:20px; margin-bottom:16px; border-radius:var(--radius-sm);
   }
   .qb-row{ display:flex; gap:16px; align-items:flex-start; margin-bottom:16px; }
   .qb-row:last-child{ margin-bottom:0; }
-  .qb-row > label.qb-label{ width:80px; flex-shrink:0; padding-top:12px; font-size:15px; }
+  .qb-row > label.qb-label{ width:80px; flex-shrink:0; padding-top:12px; font-size:14px; color:var(--text); }
   .qb-row > .qb-field{ flex:1; min-width:0; }
-  .qb-row > .hint{ padding-top:14px; flex-shrink:0; }
-  .qb-row.actions{ border-top:1px solid #ccc; padding-top:16px; gap:10px; }
+  .qb-row > .hint{ padding-top:14px; flex-shrink:0; width:78px; text-align:left; }
+  .qb-row.actions{ border-top:1px solid var(--divider); padding-top:16px; gap:10px; }
   .qb-row.align-center{ align-items:center; }
   .qb-row.align-center > .qb-label{ padding-top:0; }
 
   .answer-row{ display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; }
-  .answer-row .qb-label{ width:80px; flex-shrink:0; padding-top:12px; font-size:15px; }
+  .answer-row .qb-label{ width:80px; flex-shrink:0; padding-top:12px; font-size:14px; color:var(--text); }
   .answer-row .qb-field{ flex:1; min-width:0; }
-  .answer-row .hint{ padding-top:14px; }
+  .answer-row .hint{ padding-top:14px; width:78px; text-align:left; }
 
   .required-inline{ display:flex; align-items:center; gap:10px; padding-top:10px; }
 
@@ -137,16 +188,38 @@
 
   .priv-items{ display:flex; flex-wrap:wrap; gap:20px 28px; margin-bottom:16px; }
   .priv-table{ width:100%; border-collapse:collapse; }
-  .priv-table th, .priv-table td{ border:1px solid #000; padding:10px 14px; text-align:center; font-size:14px; }
-  .priv-table th{ background: var(--header-bg); }
-  .priv-table td.center-check input{ width:18px;height:18px; accent-color:var(--accent); }
+  .priv-table th, .priv-table td{ border:none; border-bottom:1px solid var(--divider); padding:10px 14px; text-align:center; font-size:14px; }
+  .priv-table tr:last-child td{ border-bottom:none; }
+  .priv-table th{ background: var(--header-bg); font-weight:500; color:var(--muted); }
+  .priv-table td.center-check input{ width:18px;height:18px; accent-color:var(--primary); }
+
+  .hint-inline{ font-weight:400; font-size:12px; color:var(--muted); display:block; }
+  .consent-flags-row{ gap:32px; }
+  .qb-label-wide{ width:112px !important; }
+
+  /* Groups the "설정" fields (필수여부/광고수신동의/하위동의서 토글) into one visually distinct
+     panel, separate from the 동의서 명·내용 content fields above and the action buttons below —
+     otherwise all five fields read as one undifferentiated stack. */
+  .consent-options{
+    background: rgba(0,0,0,.03); border-radius: var(--radius-sm);
+    padding: 16px; margin: 4px 0 16px; display:flex; flex-direction:column; gap:16px;
+  }
+  .consent-options .qb-row{ margin-bottom:0; }
+
+  .sub-consent-list{ margin-top:6px; display:flex; flex-direction:column; gap:14px; }
+  .sub-consent-item{ background:#fff; border:1px solid var(--divider); border-left:4px solid var(--primary); border-radius:var(--radius-sm); padding:16px; display:flex; flex-direction:column; gap:14px; box-shadow: var(--elevation-1); }
+  .sub-consent-item .qb-row{ margin-bottom:0; }
+  .sc-order-group{ display:flex; align-items:center; gap:8px; }
+  .sc-order-group label{ font-size:14px; color:var(--text); white-space:nowrap; }
+  .sc-order-input{ width:64px; padding:8px 10px; text-align:center; }
 
   /* result table */
   .result-section{ margin-bottom:36px; }
-  .result-section h3{ font-size:17px; margin:0 0 12px; }
+  .result-section h3{ font-size:16px; font-weight:500; color:var(--text); margin:0 0 12px; }
   table.desc-table{ width:100%; border-collapse:collapse; }
-  table.desc-table td{ border:1px solid #000; padding:14px 18px; font-size:14px; vertical-align:top; }
-  table.desc-table td.label-cell{ background: var(--header-bg); width:220px; font-weight:600; }
+  table.desc-table td{ border:none; border-bottom:1px solid var(--divider); padding:14px 18px; font-size:14px; vertical-align:top; }
+  table.desc-table tr:last-child td{ border-bottom:none; }
+  table.desc-table td.label-cell{ background: var(--header-bg); width:220px; font-weight:500; color:var(--muted); }
   table.desc-table td.plain{ white-space:pre-wrap; word-break:break-word; }
 
   @media (max-width: 640px){
@@ -157,16 +230,16 @@
 
   .workspace{ display:grid; grid-template-columns: 1fr 380px; gap:24px; align-items:start; }
   .preview-card{ position:sticky; top:20px; }
-  .preview-sticky{ background:var(--surface); border:1px solid #000; border-radius:var(--radius); padding:20px; }
-  .preview-title{ font-size:13px; font-weight:700; color:var(--muted); margin:0 0 14px; }
+  .preview-sticky{ background:var(--surface); border:none; box-shadow: var(--elevation-1); border-radius:var(--radius); padding:20px; }
+  .preview-title{ font-size:13px; font-weight:500; color:var(--muted); margin:0 0 14px; }
   .preview-sub{ font-weight:400; }
   .preview-img-wrap{ position:relative; width:100%; line-height:0; }
-  .preview-img{ width:100%; display:block; border-radius:4px; }
+  .preview-img{ width:100%; display:block; border-radius:var(--radius-sm); }
   .preview-hl{
     position:absolute; border:2px solid transparent; border-radius:2px;
     transition: border-color .15s ease, box-shadow .15s ease; pointer-events:none;
   }
-  .preview-hl.active{ border-color:var(--error); box-shadow:0 0 0 3px rgba(229,69,69,0.15); }
+  .preview-hl.active{ border-color:var(--error); box-shadow:0 0 0 3px rgba(211,47,47,0.15); }
 
   @media (max-width: 980px){
     .workspace{ grid-template-columns: 1fr; }
@@ -175,19 +248,21 @@
 
   .update-banner{
     position: fixed; top:0; left:0; right:0; z-index: 1000;
-    background: var(--accent); color:#fff; text-align:center;
-    padding:12px 20px; font-size:14px; font-weight:600;
+    background: var(--primary); color:#fff; text-align:center;
+    padding:12px 20px; font-size:14px; font-weight:500;
+    box-shadow: var(--elevation-3);
     display:none; align-items:center; justify-content:center; gap:14px;
   }
   .update-banner.show{ display:flex; }
   .update-banner button{
-    background:#fff; color:var(--accent); border:none; border-radius:4px;
-    padding:6px 16px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;
+    background:#fff; color:var(--primary); border:none; border-radius:var(--radius-sm);
+    padding:6px 16px; font-size:13px; font-weight:500; letter-spacing:.3px; cursor:pointer; font-family:inherit;
   }
 
   .toast{
     position: fixed; bottom: 32px; left:50%; transform: translateX(-50%);
-    background: #080808; color:#fff; padding:12px 22px; border-radius:6px; font-size:14px;
+    background: #323232; color:#fff; padding:14px 24px; border-radius:var(--radius-sm); font-size:14px;
+    box-shadow: var(--elevation-3);
     opacity:0; pointer-events:none; transition: opacity .2s ease;
     z-index: 999;
   }
@@ -363,6 +438,7 @@
     </section>
 
     <div class="form-actions">
+      <button id="btnBack" class="btn btn-secondary hidden">뒤로 가기</button>
       <button id="btnNext" class="btn btn-primary hidden">다음</button>
       <button id="btnSubmit" class="btn btn-primary">완료</button>
     </div>
@@ -422,7 +498,7 @@
 
   // Bump this on every deployed change, together with the matching value in version.json.
   // checkForUpdate() below compares the two to tell a visitor "a newer version is live".
-  var APP_VERSION = "0.5";
+  var APP_VERSION = "0.9";
 
   // ---------- helpers ----------
   function $(sel, root){ return (root||document).querySelector(sel); }
@@ -483,6 +559,7 @@
     var db = isDbType();
     $('#btnNext').classList.toggle('hidden', !(db && step===1));
     $('#btnSubmit').classList.toggle('hidden', db && step===1);
+    $('#btnBack').classList.toggle('hidden', !(db && step===2));
     updatePreview();
     recomputeSubmitEnabled();
   }
@@ -745,8 +822,78 @@
 
   // ---------- consent (동의서) builder ----------
   var consentsWrap = $('#consentsWrap');
+  var SUB_CONSENT_MAX = 5;
+
+  function renumberSubConsents(list){
+    $all('.sub-consent-item', list).forEach(function(item, i){ $('.sc-order-input', item).value = i + 1; });
+  }
+  // Lets the user retype the "순서" number to reorder a sub-consent after finishing all entries,
+  // rather than only ever appending at the end.
+  function moveSubConsentToPosition(list, item, targetPos){
+    var items = $all('.sub-consent-item', list);
+    var total = items.length;
+    var clamped = Math.max(1, Math.min(total, Math.round(targetPos) || 1));
+    items.splice(items.indexOf(item), 1);
+    items.splice(clamped - 1, 0, item);
+    items.forEach(function(it){ list.appendChild(it); });
+    renumberSubConsents(list);
+  }
+
+  function makeSubConsentRow(list){
+    var item = el('div', 'sub-consent-item');
+    item.innerHTML =
+      '<div class="qb-row align-center">'+
+        '<div class="sc-order-group"><label>순서</label><input type="number" class="sc-order-input" min="1" value="1"></div>'+
+        '<label class="checkbox-item"><input type="checkbox" class="sc-required"> 필수 여부</label>'+
+      '</div>'+
+      '<div class="qb-row">'+
+        '<label class="qb-label">동의서명</label>'+
+        '<div class="qb-field"><input class="input sc-name" maxlength="500" placeholder="동의서 명을 입력해주세요."></div>'+
+        '<span class="hint">최대 500자</span>'+
+      '</div>'+
+      '<div class="qb-row">'+
+        '<label class="qb-label">내용</label>'+
+        '<div class="qb-field"><textarea class="input sc-body" maxlength="5000" placeholder="내용을 입력해주세요."></textarea></div>'+
+        '<span class="hint">최대 5000자</span>'+
+      '</div>'+
+      '<div class="qb-row actions">'+
+        '<button type="button" class="btn-dark-sm sc-remove">삭제</button>'+
+        '<button type="button" class="btn-dark-sm sc-add">추가</button>'+
+      '</div>';
+
+    $('.sc-order-input', item).addEventListener('change', function(e){
+      moveSubConsentToPosition(list, item, parseInt(e.target.value, 10));
+    });
+    var scBodyTa = $('.sc-body', item);
+    scBodyTa.addEventListener('input', function(){ scBodyTa.style.height='auto'; scBodyTa.style.height=(scBodyTa.scrollHeight)+'px'; });
+
+    $('.sc-add', item).addEventListener('click', function(){
+      if($all('.sub-consent-item', list).length >= SUB_CONSENT_MAX){
+        alert('하위 동의서는 최대 5개까지 추가할 수 있습니다.');
+        return;
+      }
+      var newItem = makeSubConsentRow(list);
+      list.insertBefore(newItem, item.nextSibling);
+      renumberSubConsents(list);
+    });
+    $('.sc-remove', item).addEventListener('click', function(){
+      var block = list.closest('.consent-block');
+      if($all('.sub-consent-item', list).length <= 1){
+        // spec: deleting the only remaining sub-consent switches the parent back to 미사용
+        // instead of blocking the action with an alert.
+        $('.sub-consent-use[value=unuse]', block).checked = true;
+        $('.sub-consent-use[value=unuse]', block).dispatchEvent(new Event('change'));
+        return;
+      }
+      list.removeChild(item);
+      renumberSubConsents(list);
+    });
+    return item;
+  }
+
   function makeConsentBlock(){
     cCounter++;
+    var groupName = 'subConsentUse_' + cCounter;
     var block = el('div','consent-block');
     block.innerHTML =
       '<div class="qb-row">'+
@@ -759,10 +906,20 @@
         '<div class="qb-field"><textarea class="input c-body" maxlength="5000" placeholder="내용을 입력해주세요."></textarea></div>'+
         '<span class="hint">최대 5000자</span>'+
       '</div>'+
-      '<div class="qb-row align-center">'+
-        '<label class="qb-label">필수 여부</label>'+
-        '<label class="checkbox-item"><input type="checkbox" class="c-required"></label>'+
+      '<div class="consent-options">'+
+        '<div class="qb-row align-center consent-flags-row">'+
+          '<label class="checkbox-item"><input type="checkbox" class="c-required"> 필수 여부</label>'+
+          '<label class="checkbox-item"><input type="checkbox" class="c-ad-consent"> 광고 수신 동의 안내 필요</label>'+
+        '</div>'+
+        '<div class="qb-row align-center">'+
+          '<label class="qb-label qb-label-wide">하위 동의서<span class="hint-inline">(최대 5개)</span></label>'+
+          '<div class="radio-row">'+
+            '<label class="radio-item"><input type="radio" name="'+groupName+'" class="sub-consent-use" value="use"> 사용</label>'+
+            '<label class="radio-item"><input type="radio" name="'+groupName+'" class="sub-consent-use" value="unuse" checked> 미사용</label>'+
+          '</div>'+
+        '</div>'+
       '</div>'+
+      '<div class="sub-consent-list hidden"></div>'+
       '<div class="qb-row actions">'+
         '<button type="button" class="btn-dark-sm c-remove">동의서 삭제</button>'+
         '<button type="button" class="btn-dark-sm c-add">동의서 추가</button>'+
@@ -779,6 +936,17 @@
     });
     var bodyTa = $('.c-body', block);
     bodyTa.addEventListener('input', function(){ bodyTa.style.height='auto'; bodyTa.style.height=(bodyTa.scrollHeight)+'px'; });
+
+    var subList = $('.sub-consent-list', block);
+    $all('.sub-consent-use', block).forEach(function(radio){
+      radio.addEventListener('change', function(){
+        var useIt = $('.sub-consent-use[value=use]', block).checked;
+        subList.classList.toggle('hidden', !useIt);
+        if(useIt && subList.children.length === 0){
+          subList.appendChild(makeSubConsentRow(subList));
+        }
+      });
+    });
     return block;
   }
   consentsWrap.appendChild(makeConsentBlock());
@@ -804,7 +972,7 @@
   }
   recomputeSubmitEnabled();
 
-  // ---------- next button (db step1 -> step2) ----------
+  // ---------- next / back (db step1 <-> step2) ----------
   $('#btnNext').addEventListener('click', function(){
     fTitle.dispatchEvent(new Event('blur'));
     fBenefit.dispatchEvent(new Event('blur'));
@@ -812,6 +980,11 @@
     fThumb.dispatchEvent(new Event('blur'));
     if(!step1Valid()){ return; }
     goToStep(2);
+  });
+  // goToStep only toggles visibility — it never clears field values, so the 기본 정보 entered
+  // in step 1 (and everything typed in step 2) is preserved when moving back and forth.
+  $('#btnBack').addEventListener('click', function(){
+    goToStep(1);
   });
 
   // ---------- gather question data ----------
@@ -840,10 +1013,21 @@
   }
   function gatherConsents(){
     return $all('.consent-block', consentsWrap).map(function(block){
+      var useSub = $('.sub-consent-use[value=use]', block).checked;
+      var subConsents = useSub ? $all('.sub-consent-item', block).map(function(item, i){
+        return {
+          order: i + 1,
+          required: $('.sc-required', item).checked,
+          name: $('.sc-name', item).value.trim(),
+          body: $('.sc-body', item).value.trim()
+        };
+      }).filter(function(sc){ return sc.name || sc.body; }) : [];
       return {
         name: $('.c-name', block).value.trim(),
         body: $('.c-body', block).value.trim(),
-        required: $('.c-required', block).checked
+        required: $('.c-required', block).checked,
+        adConsent: $('.c-ad-consent', block).checked,
+        subConsents: subConsents
       };
     }).filter(function(c){ return c.name || c.body; });
   }
@@ -959,8 +1143,16 @@
         sections.push({ title:'추가 동의서'+(idx+1), rows:[
           ['동의서 명', c.name],
           ['내용', c.body],
-          ['필수 여부', c.required ? '필수' : '선택']
+          ['필수 여부', c.required ? 'O' : 'X'],
+          ['광고 수신 동의 안내 필요', c.adConsent ? 'O' : 'X']
         ]});
+        c.subConsents.forEach(function(sc, subIdx){
+          sections.push({ title:'추가 동의서'+(idx+1)+'-'+(subIdx+1), rows:[
+            ['동의서 명', sc.name],
+            ['내용', sc.body],
+            ['필수 여부', sc.required ? 'O' : 'X']
+          ]});
+        });
       });
     }
 
